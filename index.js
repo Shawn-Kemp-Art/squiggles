@@ -44,11 +44,13 @@ if(new URLSearchParams(window.location.search).get('d')){qcomplexity = new URLSe
 
 var qorientation =R.random_int(1,2) < 2 ? "portrait" : "landscape";
 var qframecolor = R.random_int(0,3) < 1 ? "White" : R.random_int(1,3) < 2 ? "Mocha" : "Random";
-var qtype = "Wave"; console.log(qtype);
+var qtype = "Squiggle"; console.log(qtype);
 var qframetype = R.random_int(1,2) < 1 ? "Circle" : "Square";
 var qcenter = R.random_int(1,1000);
+if (qorientation=="portrait"){qcenter = R.random_int(300,700)}else{qcenter = R.random_int(200,600)}
+console.log(qcenter);
 var qmatwidth = R.random_int(50,75);
-var qnwaves = R.random_int(1,4);
+var qnwaves = R.random_int(1,4);console.log(qnwaves);
 var qaspectratio = "4:5";
 
 //FXparams
@@ -276,7 +278,7 @@ columnWidth = Math.floor((wide+100-(R.random_dec()*(wide))))
 //var type = R.random_dec()
 //var frameType = R.random_dec();
 //var nwaves = R.random_dec();
-var swaves = R.random_int(50,200);
+var swaves = R.random_int(100,400);console.log(swaves);
 var rotated = R.random_dec()
 
 
@@ -286,18 +288,15 @@ for (z = 0; z < stacks; z++) {
 
         drawFrame(z);
     
-        if ($fx.getParam('type')== "Wave"){
-            if(z!=stacks-0 && ($fx.getParam('frametype')== "Square")){wavebase(z);waveCut(z);}
-            else if(z!=stacks-0){columnWidth=wide;wavebase(z);waveCut(z);circleFrame(z)}
-
-        } else{
+        
             if(z!=stacks-0 && $fx.getParam('nwaves')== 2){squiggleCut(z,sliceLine); squiggleCut(z,sliceLine+swaves);}
 
             else if(z!=stacks-0 && $fx.getParam('nwaves')== 1){squiggleCut(z,sliceLine);}
 
             else if(z!=stacks-0 && $fx.getParam('nwaves')== 3){squiggleCut(z,sliceLine);squiggleCut(z,sliceLine+swaves);squiggleCut(z,sliceLine-swaves);}
 
-        }
+            else if(z!=stacks-0 && $fx.getParam('nwaves')== 4){squiggleCut(z,sliceLine);squiggleCut(z,sliceLine+swaves);squiggleCut(z,sliceLine-swaves);squiggleCut(z,sliceLine-swaves*2);squiggleCut(z,sliceLine+swaves*2);}
+        
         
         
         
