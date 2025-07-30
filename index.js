@@ -46,9 +46,9 @@ var qorientation =R.random_int(1,2) < 2 ? "portrait" : "landscape";
 var qframecolor = R.random_int(0,3) < 1 ? "White" : R.random_int(1,3) < 2 ? "Mocha" : "Random";
 var qtype = "Squiggle"; console.log(qtype);
 var qframetype = R.random_int(1,2) < 1 ? "Circle" : "Square";
-var qcenter = R.random_int(1,1000);
+var qcenter = R.random_int(800,900);
 if (qorientation=="portrait"){qcenter = R.random_int(300,700)}else{qcenter = R.random_int(200,600)}
-console.log(qcenter);
+console.log("qcetner"+qcenter);
 var qmatwidth = R.random_int(50,75);
 var qnwaves = R.random_int(1,4);console.log(qnwaves);
 var qaspectratio = "4:5";
@@ -161,7 +161,7 @@ definitions = [
         options: {
             min: 1,
             max: 1000,
-            step: 10,
+            step: 1,
         },  
     },
     
@@ -272,6 +272,7 @@ var longestDim = wide;if (wide<high){longestDim=high;}
 
 
 var sliceLine = $fx.getParam('center');
+console.log("sliceLine"+sliceLine)
 var gap = Math.floor(8+Math.floor(R.random_dec()*25))
 var columnWidth = Math.floor((wide-(framewidth*2+100))-(R.random_dec()*400))
 columnWidth = Math.floor((wide+100-(R.random_dec()*(wide))))
@@ -279,7 +280,7 @@ columnWidth = Math.floor((wide+100-(R.random_dec()*(wide))))
 //var frameType = R.random_dec();
 //var nwaves = R.random_dec();
 var swaves = R.random_int(100,400);console.log(swaves);
-var rotated = R.random_dec()
+//var rotated = R.random_dec()
 
 
 for (z = 0; z < stacks; z++) {
@@ -289,16 +290,15 @@ for (z = 0; z < stacks; z++) {
         drawFrame(z);
     
         
-            if(z!=stacks-0 && $fx.getParam('nwaves')== 2){squiggleCut(z,sliceLine); squiggleCut(z,sliceLine+swaves);}
-
-            else if(z!=stacks-0 && $fx.getParam('nwaves')== 1){squiggleCut(z,sliceLine);}
-
-            else if(z!=stacks-0 && $fx.getParam('nwaves')== 3){squiggleCut(z,sliceLine);squiggleCut(z,sliceLine+swaves);squiggleCut(z,sliceLine-swaves);}
-
-            else if(z!=stacks-0 && $fx.getParam('nwaves')== 4){squiggleCut(z,sliceLine);squiggleCut(z,sliceLine+swaves);squiggleCut(z,sliceLine-swaves);squiggleCut(z,sliceLine-swaves*2);squiggleCut(z,sliceLine+swaves*2);}
+            //if($fx.getParam('nwaves')== 2){squiggleCut(z,sliceLine); squiggleCut(z,sliceLine+swaves);}
+            //else if($fx.getParam('nwaves')== 1){squiggleCut(z,sliceLine);}
+            //else if($fx.getParam('nwaves')== 3){squiggleCut(z,sliceLine);squiggleCut(z,sliceLine+swaves);squiggleCut(z,sliceLine-swaves);}
+            //else if($fx.getParam('nwaves')== 4){squiggleCut(z,sliceLine);squiggleCut(z,sliceLine+swaves);squiggleCut(z,sliceLine-swaves);squiggleCut(z,sliceLine-swaves*1.2);squiggleCut(z,sliceLine+swaves*1.2);}
         
-        
-        
+            squiggleCut(z,sliceLine);
+            if($fx.getParam('nwaves') > 1) {squiggleCut(z,sliceLine+swaves)};
+            if($fx.getParam('nwaves') > 2) {squiggleCut(z,sliceLine-swaves)};
+            if($fx.getParam('nwaves') > 3) {squiggleCut(z,sliceLine-swaves*1.5)};
         
         
         //if (rotated<.5){sheet[z].rotate(90,new Point(wide/2,high/2))}
@@ -308,14 +308,49 @@ for (z = 0; z < stacks; z++) {
         cutMarks(z);
         hanger(z);// add cut marks and hanger holes
         if (z == stacks-1) {signature(z);}// sign the top layer
-        sheet[z].scale(2.2);
-        sheet[z].position = new Point(paper.view.viewSize.width/2, paper.view.viewSize.height/2);
+        //sheet[z].scale(2.2);
+        //sheet[z].position = new Point(paper.view.viewSize.width/2, paper.view.viewSize.height/2);
+        sheet[z].reduce();
        
-        var group = new Group(sheet[z]);
+       // var group1 = sheet[z];
+
+            //var group = new Group(group1.children.map(c => c.clone()));
+    
+
+       var group = new Group(sheet[z]);
+
+        group.scale(2.2);
+        group.position = paper.view.center;
         
         console.log(z)//Show layer completed in console
     
 }//end z loop
+
+
+
+function normalizeAndTransformLayer(z) {
+    let shape = sheet[z];
+
+    // Convert CompoundPath to proper group of cloned paths
+    if (shape instanceof CompoundPath) {
+        const children = shape.children.map(child => {
+            return child.clone(); // clone to detach from original compound path
+        });
+        shape.remove(); // remove the old compound path
+        shape = new Group(children);
+    } else {
+        // If it's a Path, wrap it as well for uniformity
+        shape = new Group([shape]);
+    }
+
+    // Now apply transforms safely
+    shape.reduce(); // flatten transforms
+    shape.scale(2.2);
+    shape.position = paper.view.center;
+
+    // Replace back into sheet[]
+    sheet[z] = shape;
+}
 
 //--------- Finish up the preview ----------------------- 
 
@@ -336,7 +371,7 @@ for (z = 0; z < stacks; z++) {
     //floatingframe();
     //upspirestudio(features); //#render and send features to upspire.studio
 
-    //add a white background layer
+   // add a white background layer
     outsideframe = new Path.Rectangle(new Point(0,0),new Size(wide, high), framradius)
     sheet[stacks+1] = outsideframe;
     sheet[stacks+1].style = {fillColor: "#ffffff", strokeColor: linecolor.Hex, strokeWidth: 1*ratio,shadowColor: new Color(0,0,0,[0.3]),shadowBlur: 20,shadowOffset: new Point((stacks-z)*2.3, (stacks-z)*2.3)};
@@ -467,13 +502,25 @@ function waveCut(z){
 function squiggleCut(z,centerline){
     var lines = new Path();
     var wy=centerline;
+    var stopx=0
+
     for (wx=0;wx<wide;wx=(wx+Math.floor(noise.get(wx/10,wy/9)*100))){
         wy=centerline+Math.floor(150-noise.get(wx/10,wy/9)*300)
         points = new Point(wx,wy)
         lines.add(points);
+        //console.log(wx,wy);
+        stopx=wx;
+        
     }
-    lines.smooth()
-    lines.scale(1+noise.get(z), new Point(wide/2, centerline));
+    if (stopx<wide) {points = new Point(wide,wy);lines.add(points);}
+    //lines.flatten(20);
+    //lines.simplify()
+    lines.smooth({ type: 'catmull-rom', factor: 1 })
+    console.log(lines);
+    
+    var scaleFactor = 1 + noise.get(z * 0.1) * 0.2;
+    lines.scale(scaleFactor, new Point(wide/2, centerline));
+    //lines.scale(Math.floor(.9+noise.get(z)), new Point(wide/2, centerline));
     mesh = PaperOffset.offsetStroke(lines, (stacks-z)*7, { cap: 'round',strokeWidth: 1 })
     lines.remove();
     sheet[z] = (sheet[z].unite(mesh));
