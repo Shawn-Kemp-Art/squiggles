@@ -515,7 +515,8 @@ function squiggleCut(z,centerline){
     if (stopx<wide) {points = new Point(wide,wy);lines.add(points);}
     //lines.flatten(20);
     //lines.simplify()
-    lines.smooth({ type: 'catmull-rom', factor: 1 })
+    //lines.smooth({ type: 'catmull-rom', factor: 1 })
+    lines.simplify(0.1);
     console.log(lines);
     
     var scaleFactor = 1 + noise.get(z * 0.1) * 0.2;
