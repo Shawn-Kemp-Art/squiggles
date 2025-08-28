@@ -46,11 +46,11 @@ var qorientation =R.random_int(1,2) < 2 ? "portrait" : "landscape";
 var qframecolor = R.random_int(0,3) < 1 ? "White" : R.random_int(1,3) < 2 ? "Mocha" : "Random";
 var qtype = "Squiggle"; console.log(qtype);
 var qframetype = R.random_int(1,2) < 1 ? "Circle" : "Square";
-var qcenter = R.random_int(800,900);
+var qcenter = R.random_int(300,600);
 if (qorientation=="portrait"){qcenter = R.random_int(300,700)}else{qcenter = R.random_int(200,600)}
 console.log("qcetner"+qcenter);
 var qmatwidth = R.random_int(50,75);
-var qnwaves = R.random_int(1,4);console.log(qnwaves);
+var qnwaves = R.random_int(1,6);console.log(qnwaves);
 var qaspectratio = "4:5";
 
 //FXparams
@@ -271,7 +271,7 @@ var longestDim = wide;if (wide<high){longestDim=high;}
 //---- Draw the Layers
 
 
-var sliceLine = $fx.getParam('center');
+var sliceLine = high/2;
 console.log("sliceLine"+sliceLine)
 var gap = Math.floor(8+Math.floor(R.random_dec()*25))
 var columnWidth = Math.floor((wide-(framewidth*2+100))-(R.random_dec()*400))
@@ -279,7 +279,11 @@ columnWidth = Math.floor((wide+100-(R.random_dec()*(wide))))
 //var type = R.random_dec()
 //var frameType = R.random_dec();
 //var nwaves = R.random_dec();
-var swaves = R.random_int(100,400);console.log(swaves);
+var swaves1 = R.random_int(225,775);console.log(swaves1);
+var swaves2 = R.random_int(225,775);console.log(swaves2);
+var swaves3 = R.random_int(225,775);console.log(swaves3);
+var swaves4 = R.random_int(225,775);console.log(swaves4);
+var swaves5 = R.random_int(225,775);console.log(swaves5);
 //var rotated = R.random_dec()
 
 
@@ -295,10 +299,11 @@ for (z = 0; z < stacks; z++) {
             //else if($fx.getParam('nwaves')== 3){squiggleCut(z,sliceLine);squiggleCut(z,sliceLine+swaves);squiggleCut(z,sliceLine-swaves);}
             //else if($fx.getParam('nwaves')== 4){squiggleCut(z,sliceLine);squiggleCut(z,sliceLine+swaves);squiggleCut(z,sliceLine-swaves);squiggleCut(z,sliceLine-swaves*1.2);squiggleCut(z,sliceLine+swaves*1.2);}
         
-            squiggleCut(z,sliceLine);
-            if($fx.getParam('nwaves') > 1) {squiggleCut(z,sliceLine+swaves)};
-            if($fx.getParam('nwaves') > 2) {squiggleCut(z,sliceLine-swaves)};
-            if($fx.getParam('nwaves') > 3) {squiggleCut(z,sliceLine-swaves*1.5)};
+            squiggleCut(z,swaves1);
+            if($fx.getParam('nwaves') > 1) {squiggleCut(z,swaves2)};
+            if($fx.getParam('nwaves') > 2) {squiggleCut(z,swaves3)};
+            if($fx.getParam('nwaves') > 3) {squiggleCut(z,swaves4)};
+            if($fx.getParam('nwaves') > 4) {squiggleCut(z,swaves5)};
         
         
         //if (rotated<.5){sheet[z].rotate(90,new Point(wide/2,high/2))}
@@ -367,7 +372,7 @@ function normalizeAndTransformLayer(z) {
     }
     console.log(features);
     $fx.features(features);
-
+    paper.view.update();
     //floatingframe();
     //upspirestudio(features); //#render and send features to upspire.studio
 
@@ -502,10 +507,15 @@ function waveCut(z){
 function squiggleCut(z,centerline){
     var lines = new Path();
     var wy=centerline;
-    var stopx=0
+    var stopx=10
+    var maxamp = high-wy;
+    
+    if (wy<maxamp){maxamp=wy}
+    if (maxamp>200){maxamp=200}
+    console.log(maxamp);
 
-    for (wx=0;wx<wide;wx=(wx+Math.floor(noise.get(wx/10,wy/9)*100))){
-        wy=centerline+Math.floor(150-noise.get(wx/10,wy/9)*300)
+    for (wx=10;wx<wide-10;wx=(wx+Math.floor(noise.get(wx/10,wy/9)*100))){
+        wy=centerline+Math.floor(maxamp-(noise.get(wx/10,wy/9)*(maxamp*2)))
         points = new Point(wx,wy)
         lines.add(points);
         //console.log(wx,wy);
@@ -516,8 +526,7 @@ function squiggleCut(z,centerline){
     //lines.flatten(20);
     //lines.simplify()
     //lines.smooth({ type: 'catmull-rom', factor: 1 })
-    lines.simplify(0.1);
-    console.log(lines);
+    lines.simplify(0.5);
     
     var scaleFactor = 1 + noise.get(z * 0.1) * 0.2;
     lines.scale(scaleFactor, new Point(wide/2, centerline));
