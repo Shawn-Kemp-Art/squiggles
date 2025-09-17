@@ -279,11 +279,11 @@ columnWidth = Math.floor((wide+100-(R.random_dec()*(wide))))
 //var type = R.random_dec()
 //var frameType = R.random_dec();
 //var nwaves = R.random_dec();
-var swaves1 = R.random_int(225,775);console.log(swaves1);
-var swaves2 = R.random_int(225,775);console.log(swaves2);
-var swaves3 = R.random_int(225,775);console.log(swaves3);
-var swaves4 = R.random_int(225,775);console.log(swaves4);
-var swaves5 = R.random_int(225,775);console.log(swaves5);
+var swaves1 = R.random_int(250,high-250);console.log(swaves1);
+var swaves2 = R.random_int(250,high-250);console.log(swaves2);
+var swaves3 = R.random_int(250,high-250);console.log(swaves3);
+var swaves4 = R.random_int(250,high-250);console.log(swaves4);
+var swaves5 = R.random_int(250,high-250);console.log(swaves5);
 //var rotated = R.random_dec()
 
 
@@ -507,12 +507,15 @@ function waveCut(z){
 function squiggleCut(z,centerline){
     var lines = new Path();
     var wy=centerline;
-    var stopx=10
+    var stopx=20
     var maxamp = high-wy;
     
     if (wy<maxamp){maxamp=wy}
     if (maxamp>200){maxamp=200}
     console.log(maxamp);
+
+    points = new Point(0,wy)
+    lines.add(points);
 
     for (wx=10;wx<wide-10;wx=(wx+Math.floor(noise.get(wx/10,wy/9)*100))){
         wy=centerline+Math.floor(maxamp-(noise.get(wx/10,wy/9)*(maxamp*2)))
@@ -527,6 +530,8 @@ function squiggleCut(z,centerline){
     //lines.simplify()
     //lines.smooth({ type: 'catmull-rom', factor: 1 })
     lines.simplify(0.5);
+    points = new Point(wide+10,wy)
+    lines.add(points);
     
     var scaleFactor = 1 + noise.get(z * 0.1) * 0.2;
     lines.scale(scaleFactor, new Point(wide/2, centerline));
