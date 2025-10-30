@@ -313,19 +313,15 @@ for (z = 0; z < stacks; z++) {
         cutMarks(z);
         hanger(z);// add cut marks and hanger holes
         if (z == stacks-1) {signature(z);}// sign the top layer
-        //sheet[z].scale(2.2);
-        //sheet[z].position = new Point(paper.view.viewSize.width/2, paper.view.viewSize.height/2);
-        sheet[z].reduce();
-       
-       // var group1 = sheet[z];
-
-            //var group = new Group(group1.children.map(c => c.clone()));
+        var layerCenter = new Point(wide / 2, high / 2);
+        var canvasCenter = new Point(paper.view.viewSize.width / 2, paper.view.viewSize.height / 2);
+        sheet[z].scale(2.2, layerCenter);
+        sheet[z].translate(canvasCenter.subtract(layerCenter));
     
 
        var group = new Group(sheet[z]);
 
-        group.scale(2.2);
-        group.position = paper.view.center;
+    
         
         console.log(z)//Show layer completed in console
     
