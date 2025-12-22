@@ -53,7 +53,7 @@ var qmatwidth = R.random_int(50,75);
 var qnwaves = R.random_int(1,6);console.log(qnwaves);
 var qaspectratio = "4:5";
 if(new URLSearchParams(window.location.search).get('ratio')){qaspectratio = new URLSearchParams(window.location.search).get('ratio')}; //size
-
+console.log(qaspectratio);
 
 //FXparams
 
@@ -81,8 +81,8 @@ definitions = [
         name: "Aspect ratio",
         type: "select",
         default: qaspectratio,
-        options: {options: ["1:1","circle","4:5"]},
-        //options: {options: ["1:1", "2:5","3:5","4:5","54:86","296:420"]},
+        //options: {options: ["1:1","circle","4:5"]},
+        options: {options: ["1:1", "2:5","3:5","4:5","54:86","296:420"]},
     },
     {
         id: "size",
