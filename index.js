@@ -317,12 +317,7 @@ for (z = 0; z < stacks; z++) {
         var canvasCenter = new Point(paper.view.viewSize.width / 2, paper.view.viewSize.height / 2);
         sheet[z].scale(2.2, layerCenter);
         sheet[z].translate(canvasCenter.subtract(layerCenter));
-    
-
-       var group = new Group(sheet[z]);
-
-    
-        
+        var group = new Group(sheet[z]);
         console.log(z)//Show layer completed in console
     
 }//end z loop
