@@ -52,6 +52,8 @@ console.log("qcetner"+qcenter);
 var qmatwidth = R.random_int(50,75);
 var qnwaves = R.random_int(1,6);console.log(qnwaves);
 var qaspectratio = "4:5";
+if(new URLSearchParams(window.location.search).get('ratio')){qaspectratio = new URLSearchParams(window.location.search).get('ratio')}; //size
+
 
 //FXparams
 
